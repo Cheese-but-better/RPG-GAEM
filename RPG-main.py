@@ -22,6 +22,7 @@ proceduralgen = "on-"
 #WORK IN PROGRESS
 devhacks = False
 reset = False
+spawnedboss = False
 
 #Colors!!!!!!!!!!!!!
 class colors:
@@ -274,7 +275,7 @@ def emptyplaces(currentplace):
 
 def createrooms():
     #Create a random set of rooms
-    global timeplayed, totalchests, totalguardedchests, totalswordrooms, totalmagicstones
+    global timeplayed, totalchests, totalguardedchests, totalswordrooms, totalmagicstones, spawnedboss
     reqrooms = 2
 
     #Empty places around the player
@@ -314,10 +315,11 @@ def createrooms():
                 if totalmagicstones < 1:
                     typesofrooms.append("magicstone")
                     totalmagicstones += 1
-                if turncounter == 10:
+                if turncounter >= 10 and spawnedboss == False:
                     startboss = rand.randint(1,5) #1 = start, anything else = doesn't
                     if startboss == 1:
                         typesofrooms = ["finalboss", "finalboss"]
+                        spawnedboss = True
                 
                 room = rand.randint(0, len(typesofrooms) - 1) #The type of the room that is to be created
                 try:
@@ -597,7 +599,7 @@ elif proceduralgen == "off":
 while True:
     turncounter += 1
 
-    if turncounter == 20:
+    if (turncounter >= 20 and spawnedboss == True) or turncounter >= 50:
         print("The King Goblin confronted you, because you were taking so long that he just got bored")
         wonfight = fight("King Goblin", 25, 1, False, health)
         if wonfight:
